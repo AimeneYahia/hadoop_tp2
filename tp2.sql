@@ -3,7 +3,7 @@ CREATE DATABASE ayahia LOCATION 'user/ayahia/db';
 
 -- creating a table 
 -- if there is a space after a comma, it will be found in the string (ie: ["french", " latin"])
-CREATE EXTERNAL TABLE ayahia.prenoms (prenom STRING, gender ARRAY<STRING>,origin ARRAY<STRING>,version DOUBLE)ROW FORMAT 
+CREATE EXTERNAL TABLE ayahia.prenoms (prenom STRING, gender ARRAY<STRING>, origin ARRAY<STRING>, version DOUBLE)ROW FORMAT 
 	DELIMITED FIELDS TERMINATED BY '\073' COLLECTION ITEMS TERMINATED by ',' 
 	STORED AS TEXTFILE LOCATION '/user/ayahia/prenoms';
 	
@@ -18,3 +18,9 @@ GROUP BY origins;
 
 -- question 2
 SELECT SIZE(origin), COUNT(prenom) FROM prenoms GROUP BY SIZE(origin);
+
+-- question 3
+SELECT genders, COUNT(prenom)
+FROM prenoms 
+LATERAL VIEW EXPLODE (gender) genderTable AS genders
+GROUP BY genders;
